@@ -20,17 +20,32 @@ angular.module('starter.controllers', ['btford.socket-io'])
     return mySocket;
 }).
 controller('LightCtrl', function ($scope,mySocket) {
+    
+    
+    mySocket.on('ledState', function(data) {
+      $scope.led = data;     
+      $scope.led.brightness = 255;
+    });
 
-    $scope.ledOn = function () {
+    $scope.setLight = function(value){
+        if(value){
+          mySocket.emit('led:on');
+        }else{
+          mySocket.emit('led:off');
+        }
+    }; 
 
-        mySocket.emit('led:on');
-        console.log('LED ON');
-    };
+    $scope.setBrightness = function(value){
+        if(value){
+          mySocket.emit('led-brightness',{value: value});
+        }
+    }; 
 
-
-    $scope.ledOff = function () {
-
-        mySocket.emit('led:off');
-        console.log('LED OFF');  
-    };    
+    $scope.setBlink = function(value){
+        if(value){
+          mySocket.emit('led-blink:on');
+        }else{
+          mySocket.emit('led-blink:off'); 
+        }
+    };   
 });

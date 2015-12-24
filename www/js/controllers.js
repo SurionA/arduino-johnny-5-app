@@ -11,7 +11,7 @@ angular.module('starter.controllers', ['btford.socket-io'])
 
 })
 .factory('mySocket', function (socketFactory) {
-  var myIoSocket = io.connect('http://192.168.0.11:3000');
+  var myIoSocket = io.connect('http://192.168.0.16:3000');
 
       mySocket = socketFactory({
         ioSocket: myIoSocket
@@ -22,30 +22,30 @@ angular.module('starter.controllers', ['btford.socket-io'])
 controller('LightCtrl', function ($scope,mySocket) {
     
     
-    mySocket.on('ledState', function(data) {
-      $scope.led = data;     
+    mySocket.on('init:motor', function(data) {
+      $scope.led = {};     
       $scope.led.brightness = 255;
     });
 
     $scope.setLight = function(value){
         if(value){
-          mySocket.emit('led:on');
+          mySocket.emit('motor:on');
         }else{
-          mySocket.emit('led:off');
+          mySocket.emit('motor:off');
         }
     }; 
 
     $scope.setBrightness = function(value){
         if(value){
-          mySocket.emit('led-brightness',{value: value});
+          mySocket.emit('motor:speed',{value: value});
         }
     }; 
 
     $scope.setBlink = function(value){
         if(value){
-          mySocket.emit('led-blink:on');
+          mySocket.emit('motor:right');
         }else{
-          mySocket.emit('led-blink:off'); 
+          mySocket.emit('motor:left'); 
         }
     };   
 });
